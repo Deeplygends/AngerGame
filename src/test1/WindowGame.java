@@ -42,17 +42,6 @@ public class WindowGame extends BasicGame {
 	{
 		this.container = container;
 		this.map = new TiledMap(".\\src\\main\\ressources\\map\\test.tmx");
-
-	}
-	/***
-	 * Generation de l'affichage de tous les éléments (Map, Personnages, etc)
-	 */
-	@Override
-	public void render(GameContainer container, Graphics g) throws SlickException {
-
-		g.translate(container.getWidth() / 2 - (int) this.xCamera, 
-				container.getHeight() / 2 - (int) this.yCamera);
-		this.map.render(0, 0);
 		//Ajout des sprite du joueur principal
 		SpriteSheet spriteSheet = new SpriteSheet(".\\src\\main\\ressources\\character\\personnage.png", 64, 64);
 		//Initialisation des animations du personnage
@@ -66,7 +55,19 @@ public class WindowGame extends BasicGame {
 		this.animations[6] = loadAnimation(spriteSheet, 1, 9, 2);
 		this.animations[7] = loadAnimation(spriteSheet, 1, 9, 3);
 
+	}
+	/***
+	 * Generation de l'affichage de tous les éléments (Map, Personnages, etc)
+	 */
+	@Override
+	public void render(GameContainer container, Graphics g) throws SlickException {
 
+		g.translate(container.getWidth() / 2 - (int) this.xCamera, 
+				container.getHeight() / 2 - (int) this.yCamera);
+		this.map.render(0, 0);
+		
+
+		
 		//Affiche l'ombre sous le personnage
 		g.setColor(new Color(0, 0, 0, .5f));
 		g.fillOval(x +16, y + 52, 32, 16);
@@ -120,8 +121,10 @@ public class WindowGame extends BasicGame {
 	private Animation loadAnimation(SpriteSheet spriteSheet, int startX, int endX, int y) {
 		Animation animation = new Animation();
 		for (int x = startX; x < endX; x++) {
+			System.out.println("line : " + y + " current x : " +x );
 			animation.addFrame(spriteSheet.getSprite(x, y), 100);
 		}
+		animation.setAutoUpdate(true);
 		return animation;
 	}
 
