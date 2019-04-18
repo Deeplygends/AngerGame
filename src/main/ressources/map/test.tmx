@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" source="../tuiles/bush_tree.tsx"/>
+ <tileset firstgid="43" source="../tuiles/grass.tsx"/>
+ <tileset firstgid="61" source="../tuiles/tronc.tsx"/>
+ <tileset firstgid="79" source="../tuiles/watergrass.tsx"/>
+ <layer id="1" name="Calque de Tile 1" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACu3DAQ0AAAzDoJqaf2sXckhYNVVVVd89q9oi2RAOAAA=
+  </data>
+ </layer>
+ <layer id="3" name="Tronc" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACu3QsQ0AIAwDwSxGKIAC2H8fTIHEBF/5JEtp8xkRVStagnfXhtbge2lbm/D9fif9nUl/Z5I7M9yZ4c4Md2a4M8OdGe7McGfG7XwAzjZ/cBAOAAA=
+  </data>
+ </layer>
+ <layer id="4" name="top arbre" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACu2VOwqAMBAFV220MJ7Ob/T+1/A1Id0WC3mCvIGBwBZLJkWSmS1whol47uFgfEY4fbC33J2NOnNQ58oKN7gH5x5e5wOe8ArOPbzOLfd6nVvuVWfOXnXm7FXnSoY3fIJzD/2DHNT535T37cjnF5gUorYQDgAA
+  </data>
+ </layer>
+</map>
