@@ -89,9 +89,6 @@ public class WindowGame extends BasicGame {
     	        if (this.x < this.xCamera - mapWidth) this.xCamera = this.x + mapWidth;
     	        if (this.y > this.yCamera + mapHeight) this.yCamera = this.y - mapHeight;
     	        if (this.y < this.yCamera - mapHeight) this.yCamera = this.y + mapHeight;
-    	        
-    	        System.out.println("Character x :" +this.x+ " y: " + this.y);
-    	        System.out.println("Camera x :" +this.xCamera+ " y: " + this.yCamera);
     	    }
     }
     /**
@@ -119,8 +116,10 @@ public class WindowGame extends BasicGame {
     private Animation loadAnimation(SpriteSheet spriteSheet, int startX, int endX, int y) {
         Animation animation = new Animation();
         for (int x = startX; x < endX; x++) {
-            animation.addFrame(spriteSheet.getSprite(x, y), 100);
+            animation.addFrame(spriteSheet.getSprite(x, y), 500);
+           
         }
+        animation.setSpeed(500);
         return animation;
     }
     
