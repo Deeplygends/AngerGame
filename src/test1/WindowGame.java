@@ -3,6 +3,7 @@
  */
 package test1;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.newdawn.slick.Animation;
@@ -140,6 +141,7 @@ public class WindowGame extends BasicGame {
 
 
 	public static void main(String[] args) throws SlickException {
+		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 		new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false).start();
 	}
 
