@@ -10,8 +10,8 @@ import main.client.Client;
 
 public class Server {
 
-	public final static int PORT = 20004;
-	public final static String HOST = "10.10.44.121";
+	public final static int PORT = 2345;
+	public final static String HOST = "127.0.0.1";
 	private ServerSocket serverSocket;
 	private boolean isRunning = false;
 
