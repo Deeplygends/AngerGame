@@ -10,10 +10,10 @@ import main.client.Client;
 
 public class Server {
 
-	public final static int PORT = 2345;
-	public final static String HOST = "127.0.0.1";
+	public final static int PORT = 10001;
+	public final static String HOST = "localhost";
 	private ServerSocket serverSocket;
-	private boolean isRunning = false;
+	private boolean isRunning = true;
 
 	public Server() {
 		try {
@@ -30,17 +30,15 @@ public class Server {
 	//On lance notre serveur
 	   public void open(){
 	      
-	      //Toujours dans un thread à part vu qu'il est dans une boucle infinie
-	      Thread t = new Thread(new Runnable(){
-	         public void run(){
 	            while(isRunning == true){
 	               
 	               try {
 	                  //On attend une connexion d'un client
-	                  Socket client = serverSocket.accept();
+	            	   System.out.println("Waiting for client ...");
+	            	   Socket client = serverSocket.accept();
 	                  
-	                  //Une fois reçue, on la traite dans un thread séparé
-	                  System.out.println("Connexion cliente reçue.");                  
+	                  //Une fois reï¿½ue, on la traite dans un thread sï¿½parï¿½
+	                  System.out.println("Connexion cliente reï¿½ue.");                  
 	                  Thread t = new Thread(new ClientProcessor(client));
 	                  t.start();
 	                  
@@ -55,10 +53,8 @@ public class Server {
 	               e.printStackTrace();
 	               serverSocket = null;
 	            }
-	         }
-	      });
-	      
-	      t.start();
+
+	     
 	   }
 
 	public static void main(String[] args) {
@@ -67,11 +63,6 @@ public class Server {
 		s.open();
 		
 		System.out.println("Le serveur tourne !");
-		
-		for(int i = 0; i < 5; i++){
-	         Thread t = new Thread(new Client(Server.HOST, Server.PORT));
-	         t.start();
-	      }
 
 	}
 
