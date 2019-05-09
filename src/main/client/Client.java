@@ -1,107 +1,125 @@
 package main.client;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import main.server.Server;
+public class Client extends Thread {
+	static int port = 4800;
+	static InetAddress hote = null;
+	Socket sc = new Socket();
+	BufferedReader in;
+	PrintWriter out;
+	String nom;
+	List<String> tampon = new ArrayList<>();
+	int compteur = 0;
 
-public class Client implements Runnable{
+	Thread listener;
+	public Client(String nom) {
+		this.nom = nom;
+	}
 
-	private Socket connexion = null;
-	private PrintWriter writer = null;
-	private BufferedInputStream reader = null;
-
-	//Notre liste de commandes. Le serveur nous r�pondra diff�remment selon la commande utilis�e.
-	private String[] listCommands = {"FULL", "DATE", "HOUR", "NONE"};
-	private static int count = 0;
-	private String name = "Client-";   
-
-	public Client(String host, int port){
-		name += ++count;
+	public void run() {
 		try {
-			System.out.println();
-			connexion = new Socket(InetAddress.getByName(host), port);
-		} 
-		catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
+			sc = new Socket(hote, port);
+			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
+			out = new PrintWriter(sc.getOutputStream(), true);
+			Scanner scan = new Scanner(System.in);
+			listener = new Thread(new Runnable(){
+				
+				public void run(){
+					while(true)
+					{
+						try{
+							String s = in.readLine();
+							System.out.println(s);
+							
+						}catch(IOException e) { }
+					}
+				}
+			});
+			listener.start();
+			String rep = "";
+			// envoyer le pseudonyme au serveur
+			System.out.println("Ceci est votre nom : " + nom);
+			out.println(nom);
+			// recevoir le message d'accueil du serveur
+		
+
+			
+			
+			while (!rep.equals("/quit")) {
+				rep = scan.nextLine();
+				Calendar cal = Calendar.getInstance();
+       			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+				if(rep.equals("/list") || rep.equals("/oss117"))
+				{
+					out.println(rep);
+				}
+				else if(rep.equals("/quit"))
+				{
+					out.println("Bye");
+					rep = "/quit";
+				}
+				else{
+					// recevoir un message du serveur
+					// incrementer le nb d'echanges
+					// repondre au serveur;
+					out.println(nom + ": " + rep);
+					// faire une pause de 3sec
+				}
+				
+			}
+			// recevoir un message du serveur
+		
+			// faire une pause de 2sec
+			// envoyer un message « Bye » au serveur
+		} catch (IOException e) {
+			System.err.println("Impossible cree socket du client : " + e);
+		}  finally {
+			try {
+				sc.close();
+				
+				in.close();
+				out.close();
+			} catch (IOException e) {
+			}
 		}
 	}
 
-
-	@Override
-	public void run(){
-
-		//nous n'allons faire que 10 demandes par thread...
-		for(int i =0; i < 10; i++){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			try {
-
-
-				writer = new PrintWriter(connexion.getOutputStream(), true);
-				reader = new BufferedInputStream(connexion.getInputStream());
-				//On envoie la commande au serveur
-
-				String commande = getCommand();
-				writer.write(commande);
-				//TOUJOURS UTILISER flush() POUR ENVOYER R�ELLEMENT DES INFOS AU SERVEUR
-				writer.flush();  
-
-				System.out.println("Commande " + commande + " envoy�e au serveur");
-
-				//On attend la r�ponse
-				String response = read();
-				System.out.println("\t * " + name + " : R�ponse re�ue " + response);
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		writer.write("CLOSE");
-		writer.flush();
-		writer.close();
-	}
-
-	//M�thode qui permet d'envoyer des commandeS de fa�on al�atoire
-	private String getCommand(){
-		Random rand = new Random();
-		return listCommands[rand.nextInt(listCommands.length)];
-	}
-
-	//M�thode pour lire les r�ponses du serveur
-	private String read() throws IOException{      
-		String response = "";
-		int stream;
-		byte[] b = new byte[4096];
-		stream = reader.read(b);
-		response = new String(b, 0, stream);      
-		return response;
-	}
-	
 	public static void main(String[] args) {
+		Random r = new Random();
+		String pseudo = "Visitor " + r.nextInt(100000);
+		try {
+			if (args.length >= 2) {
+				Client.hote = InetAddress.getByName(args[0]);
+				Client.port = Integer.parseInt(args[1]);
+				if(!args[2].equals(null) && !args[2].equals(""))
+					pseudo = args[2];
+				Client c = new Client(pseudo);
+				//c.port = Integer.parseInt(args[1]);
+				//c.hote = InetAddress.getByName(args[0]);
+				c.run();
+			} else {
 
-
-		new Client(Server.HOST, Server.PORT);
-
+			}
+		} catch (UnknownHostException e) {
+			System.err.println("Machine inconnue :" + e);
+		} 
+		
 	}
+
 
 }
 
