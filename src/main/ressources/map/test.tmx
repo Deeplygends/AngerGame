@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
  <tileset firstgid="1" source="../tuiles/bush_tree.tsx"/>
  <tileset firstgid="43" source="../tuiles/grass.tsx"/>
  <tileset firstgid="61" source="../tuiles/tronc.tsx"/>
  <tileset firstgid="79" source="../tuiles/watergrass.tsx"/>
- <layer id="1" name="Calque de Tile 1" width="30" height="30">
+ <tileset firstgid="97" source="../tuiles/block.tsx"/>
+ <layer id="1" name="background1" width="30" height="30">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAACu3DAQ0AAAzDoJqaf2sXckhYNVVVVd89q9oi2RAOAAA=
   </data>
  </layer>
- <layer id="3" name="Tronc" width="30" height="30">
+ <layer id="7" name="background2" width="30" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAACu3QsQ0AIAwDwSxGKIAC2H8fTIHEBF/5JEtp8xkRVStagnfXhtbge2lbm/D9fif9nUl/Z5I7M9yZ4c4Md2a4M8OdGe7McGfG7XwAzjZ/cBAOAAA=
+   H4sIAAAAAAAACu3NOwqAMBQF0axOLdTOKH7I/nfhbCFPCShzYKpb3JQk6T0LZVqDe9RGhfbKvaOehsa/I000N/59yl9//f3u70EnXcFd0j/d7ZXyExAOAAA=
   </data>
  </layer>
- <layer id="4" name="top arbre" width="30" height="30">
+ <layer id="3" name="Tronc" width="30" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAACu2VOwqAMBAFV220MJ7Ob/T+1/A1Id0WC3mCvIGBwBZLJkWSmS1whol47uFgfEY4fbC33J2NOnNQ58oKN7gH5x5e5wOe8ArOPbzOLfd6nVvuVWfOXnXm7FXnSoY3fIJzD/2DHNT535T37cjnF5gUorYQDgAA
+   H4sIAAAAAAAACu2UOwqAMBAFY2Vl622M8Vf4uf95fHYhGLdw8wTZgYEtJEuGoHfO9bCDnjRXcIYLnIhzDTe4w5U4N9HdmcSdNWkj74g7vyEku6S9Wp1zO3N7tTqnewIc4Jj5XqtzytXvqWOp93wI55Z6zxKlOkv87b8hYZ05WGcO1pmDdeZgnTl82fkEZB25zxAOAAA=
+  </data>
+ </layer>
+ <layer id="4" name="top arbre" width="30" height="30" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACuNjYGDgB2JeIOajI5sJiJkZ6A84gJhzAOyF+Z3egBbhLAbE4kAsgUcNLcJZBohlgVgOjxpahLMSECsDsQoeNbQIZw0g1gRiLTxqCIWzPVVdhAD4wtkeCZMjjw/gC2d85toTkCcE8IUzLe2lVjiTaje1wplUewdbOBNj7nBKz4Tij17pmZCfSQXEhjMhP5MKSEnP2Nwx0OUGqWC0XUcfMBrOwxvA4peRzmwARkiOrRAOAAA=
+  </data>
+ </layer>
+ <layer id="6" name="blocker" width="30" height="30" visible="0" opacity="0.42">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAACktkYGBIHIGYniADamcane1NgdqbSmd7h0M455OgFubX4RTOWXjkCIUzoXRHbrokpI9QeOCTxxeGlJhLjDwuQCicaWUvLcMZHxgNZ/rYOxrO9LF3sIZzElQ+mUx5XGC0vUEfMBrO9AGwcEYGWUiYVoDcPg01MAA5s+R8EA4AAA==
   </data>
  </layer>
 </map>
