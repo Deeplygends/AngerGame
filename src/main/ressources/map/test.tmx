@@ -12,22 +12,22 @@
  </layer>
  <layer id="7" name="background2" width="30" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAACu3NOwqAMBQF0axOLdTOKH7I/nfhbCFPCShzYKpb3JQk6T0LZVqDe9RGhfbKvaOehsa/I000N/59yl9//f3u70EnXcFd0j/d7ZXyExAOAAA=
+   H4sIAAAAAAAACu2VuwqAMAxF08nJf7IO6qBuPvCB//8X3rFDNRhoOpgLBwKBXjhD6omoBhXwSrMDLehAozgXYAAj6BXnkvLEZeotMvWaZ51wnicwg0Ww9y/vcp5XcIHt4z68EbFwnqW94Y2IhfMs7eWSyjOXVJ65mGedXvOs08t53sEBTuH+KfYP6sQ86+SPnm9IhyprEA4AAA==
   </data>
  </layer>
- <layer id="3" name="Tronc" width="30" height="30">
+ <layer id="3" name="avant1" width="30" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAACu2UOwqAMBAFY2Vl622M8Vf4uf95fHYhGLdw8wTZgYEtJEuGoHfO9bCDnjRXcIYLnIhzDTe4w5U4N9HdmcSdNWkj74g7vyEku6S9Wp1zO3N7tTqnewIc4Jj5XqtzytXvqWOp93wI55Z6zxKlOkv87b8hYZ05WGcO1pmDdeZgnTl82fkEZB25zxAOAAA=
+   H4sIAAAAAAAACu2UQQqAIBBF5xTdJpuiNtVJ2nT/XYpGImiS+oXww0c3+uAxDBMRR7Y352Ddv3ZOfJ/SDcw7ZQVpb8gorvK8ZP63s+rjrqQ9p4QdVgw3h2cfM8TN4dnlsOwoOwW4OTy7Uf5CHkvN807PfvFxS8zzW0p5juH+aW/EcJtnDLd5xnCbZwxXeT4qcIXhItm354OwbNczim17Rqb2PNfYGxeiBGL6EA4AAA==
   </data>
  </layer>
- <layer id="4" name="top arbre" width="30" height="30" visible="0">
+ <layer id="4" name="avant2" width="30" height="30">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAACuNjYGDgB2JeIOajI5sJiJkZ6A84gJhzAOyF+Z3egBbhLAbE4kAsgUcNLcJZBohlgVgOjxpahLMSECsDsQoeNbQIZw0g1gRiLTxqCIWzPVVdhAD4wtkeCZMjjw/gC2d85toTkCcE8IUzLe2lVjiTaje1wplUewdbOBNj7nBKz4Tij17pmZCfSQXEhjMhP5MKSEnP2Nwx0OUGqWC0XUcfMBrOwxvA4peRzmwARkiOrRAOAAA=
   </data>
  </layer>
- <layer id="6" name="blocker" width="30" height="30" visible="0" opacity="0.42">
+ <layer id="6" name="blocker" width="30" height="30" opacity="0.42">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAACktkYGBIHIGYniADamcane1NgdqbSmd7h0M455OgFubX4RTOWXjkCIUzoXRHbrokpI9QeOCTxxeGlJhLjDwuQCicaWUvLcMZHxgNZ/rYOxrO9LF3sIZzElQ+mUx5XGC0vUEfMBrO9AGwcEYGWUiYVoDcPg01MAA5s+R8EA4AAA==
+   H4sIAAAAAAAACu3VOw7AIAwDUF8VCgtL7791YWDgIyxSWmFLmSzyJhQHwB02Ce9G7v/ce5M7E0u3t3PkhtxHsmfd8o/P9q031m4vX3Brttz1LrNXrlzG9bm/yJ51rSJXrqVbJqF9J1a7O+YBK1v8PhAOAAA=
   </data>
  </layer>
 </map>
