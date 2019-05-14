@@ -10,7 +10,7 @@ import main.client.Client;
 
 public class Server {
 
-	public final static int PORT = 10001;
+	public final static int PORT = 4800;
 	public final static String HOST = "localhost";
 	private ServerSocket serverSocket;
 	private boolean isRunning = true;
@@ -63,6 +63,7 @@ public class Server {
 		s.open();
 		
 		System.out.println("Le serveur tourne !");
+		
 
 	}
 
