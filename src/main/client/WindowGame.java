@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test1;
+package main.client;
 
 import java.io.File;
 import java.io.InputStream;
@@ -90,8 +90,11 @@ public class WindowGame extends BasicGame {
 	        case 0: futurY = this.y - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
 	        case 1: futurX = this.x - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break; 
 	        case 2: futurY = this.y + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
-	        case 3: futurX = this.x + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break; 
+	        case 3: futurX = this.x + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
+			default:
+				break; 
 	        }
+
 	        Image tile = this.map.getTileImage(
 	                (int) colisionX / this.map.getTileWidth(), 
 	                (int) colisionY / this.map.getTileHeight(), 
@@ -100,10 +103,10 @@ public class WindowGame extends BasicGame {
 	        
 	        if (collision) {
 	        	// il y a toujours collision si il y a un pixel non transparent dans la tuile 
-	            Color color = tile.getColor(
+	            /*Color color = tile.getColor(
 	                    (int) colisionX % this.map.getTileWidth(), 
 	                    (int) colisionY % this.map.getTileHeight());
-	            collision = color.getAlpha() > 0;
+	            collision = color.getAlpha() > 0; */
 	        } 
 	        if (collision) {
 	            this.moving = false;

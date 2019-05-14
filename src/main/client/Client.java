@@ -1,6 +1,7 @@
 package main.client;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,6 +11,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
 import java.util.Scanner;
+
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.SlickException;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
@@ -32,6 +37,8 @@ public class Client extends Thread {
 
 	public void run() {
 		try {
+			System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
+			new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false).start();
 			sc = new Socket(hote, port);
 			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
 			out = new PrintWriter(sc.getOutputStream(), true);
@@ -85,7 +92,7 @@ public class Client extends Thread {
 		
 			// faire une pause de 2sec
 			// envoyer un message « Bye » au serveur
-		} catch (IOException e) {
+		} catch (IOException | SlickException e) {
 			System.err.println("Impossible cree socket du client : " + e);
 		}  finally {
 			try {

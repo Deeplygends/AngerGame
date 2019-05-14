@@ -8,34 +8,35 @@ import java.io.InputStreamReader;
 
 
 public class ThreadClientIRC extends Thread {
-	Serveur serv;
+	Server serv;
 	Socket ssv;
 	String nom;
 	BufferedReader in;
 	PrintWriter out;
 
-	public ThreadClientIRC(Socket ssv, Serveur serv) {
+	public ThreadClientIRC(Socket ssv, Server serv) {
 		this.serv = serv;
 		this.ssv = ssv;
 	}
 
+	@Override
 	public void run() {
 		try {
 			in = new BufferedReader(new InputStreamReader(ssv.getInputStream()));
 			out = new PrintWriter(ssv.getOutputStream(),true);
 			String req = in.readLine();
 			setNom(req);
-			// envoi un premier message d'accueil â€¦
+			// envoi un premier message d'accueil …
 			serv.EnvoyerATous("[Serveur] : " + getNom() +  " vient de se connecter...");
 				
 			Envoyer("####  Bonjour bienvenue sur le serveur IRC de Micky  ####");
-			// envoi la liste des clients connectes â€¦
+			// envoi la liste des clients connectes …
 			serv.EnvoyerListeClients(out);
 			while (true) {
 				
-				// attendre un phrase de reponse â€¦
+				// attendre un phrase de reponse …
 				req = in.readLine();
-				if (req.equals("/quit") || req == null) {
+				if (req.equals("/quit")) {
 					serv.EnvoyerATous(nom + " vient de se deconnecter ...");
 					serv.supprimerClient(this);
 					System.exit(0);
@@ -57,6 +58,7 @@ public class ThreadClientIRC extends Thread {
 				}
 
 			}
+
 		} catch (IOException e) {
 			System.err.println("Erreur : " + e);
 		} finally {

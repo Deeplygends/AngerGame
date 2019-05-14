@@ -1,68 +1,80 @@
 package main.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Vector;
 
 import main.client.Client;
 
 public class Server {
-
-	public final static int PORT = 4800;
-	public final static String HOST = "localhost";
-	private ServerSocket serverSocket;
-	private boolean isRunning = true;
+	int port = 4800;
+	ServerSocket se = null;
+	Socket ssv = null;
+	int cl = 0;
+	Vector<ThreadClientIRC> V;
 
 	public Server() {
 		try {
-			serverSocket = new ServerSocket(PORT,100,InetAddress.getByName(HOST));
+			V = new Vector<>();
+			se = new ServerSocket(port);
+			while (true) {
+
+				System.out.println("Socket open ... Waiting ...");
+				ssv = se.accept();
+				System.out.println("New Client ...");
+				cl++;
+				ThreadClientIRC th = new ThreadClientIRC(ssv, this);
+				ajouterClient(th);
+				th.start();
+				
+			}
+		} catch (IOException e) {
+			System.err.println("Erreur : " + e);
 		}
-		catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
+		finally {
+			try {
+				se.close();
+			} catch (IOException e) {
+			}
 		}
 	}
-	
-	//On lance notre serveur
-	   public void open(){
-	      
-	            while(isRunning == true){
-	               
-	               try {
-	                  //On attend une connexion d'un client
-	            	   System.out.println("Waiting for client ...");
-	            	   Socket client = serverSocket.accept();
-	                  
 
-	                  
-	               } catch (IOException e) {
-	                  e.printStackTrace();
-	               }
-	            }
-	            
-	            try {
-	            	serverSocket.close();
-	            } catch (IOException e) {
-	               e.printStackTrace();
-	               serverSocket = null;
-	            }
+	public void ajouterClient(ThreadClientIRC c) {
+		V.addElement(c);
+	}
 
-	     
-	   }
+	synchronized public void supprimerClient(ThreadClientIRC c) {
+		V.remove(c);
+		cl--;
+	}
+
+	synchronized public void EnvoyerATous(String s) {
+		Calendar cal = Calendar.getInstance();
+       	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		for(ThreadClientIRC c : V)
+		{
+			if(s.split(":") != null)
+				if(!s.split(":")[0].equals(c.getNom()))
+					c.Envoyer("["+sdf.format(cal.getTime()) + "] " + s);
+		}
+	}
+
+	synchronized public void EnvoyerListeClients(PrintWriter out) {
+		String s = "";
+		for(ThreadClientIRC c : V)
+			s += c.nom+"; ";
+		System.out.println(s);
+		out.println(s);	
+	}
 
 	public static void main(String[] args) {
-
-		Server s = new Server();
-		s.open();
-		
-		System.out.println("Le serveur tourne !");
-		
-
+		new Server();
 	}
-
 }
 
