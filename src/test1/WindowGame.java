@@ -18,6 +18,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -27,11 +28,12 @@ public class WindowGame extends BasicGame {
 	private GameContainer container;
 	private TiledMap map;
 	private float mapWidth = 1024, mapHeight = 1024;
-	private float x = 300, y = 300;
+	private float x = 350, y = 300;
 	private int direction = 2;
 	private boolean moving = false;
 	private Animation[] animations = new Animation[8];
 	private float xCamera = x, yCamera = y;
+	private final static float speed = (float) 0.3;
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -42,17 +44,6 @@ public class WindowGame extends BasicGame {
 	{
 		this.container = container;
 		this.map = new TiledMap(".\\src\\main\\ressources\\map\\test.tmx");
-
-	}
-	/***
-	 * Generation de l'affichage de tous les éléments (Map, Personnages, etc)
-	 */
-	@Override
-	public void render(GameContainer container, Graphics g) throws SlickException {
-
-		g.translate(container.getWidth() / 2 - (int) this.xCamera, 
-				container.getHeight() / 2 - (int) this.yCamera);
-		this.map.render(0, 0);
 		//Ajout des sprite du joueur principal
 		SpriteSheet spriteSheet = new SpriteSheet(".\\src\\main\\ressources\\character\\personnage.png", 64, 64);
 		//Initialisation des animations du personnage
@@ -65,25 +56,63 @@ public class WindowGame extends BasicGame {
 		this.animations[5] = loadAnimation(spriteSheet, 1, 9, 1);
 		this.animations[6] = loadAnimation(spriteSheet, 1, 9, 2);
 		this.animations[7] = loadAnimation(spriteSheet, 1, 9, 3);
+		
 
 
-		//Affiche l'ombre sous le personnage
+	}
+	/***
+	 * Generation de l'affichage de tous les éléments (Map, Personnages, etc)
+	 */
+	@Override
+	public void render(GameContainer container, Graphics g) throws SlickException {
+
+		g.translate(container.getWidth() / 2 - (int) this.xCamera, 
+				container.getHeight() / 2 - (int) this.yCamera);
+		this.map.render(0, 0,0);
+		this.map.render(0, 0,1);
 		g.setColor(new Color(0, 0, 0, .5f));
-		g.fillOval(x +16, y + 52, 32, 16);
-		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x, y);
+		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
+		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
+		
+		this.map.render(0, 0,2);
+		this.map.render(0, 0,3);
 	}
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		if (this.moving) {
-			switch (this.direction) {
-			case 0: this.y -= .1f * delta; break;
-			case 1: this.x -= .1f * delta; break;
-			case 2: this.y += .1f * delta; break;
-			case 3: this.x += .1f * delta; break;
-			default:
-				break;
-			}
+			float futurX = this.x;
+	        float futurY = this.y;
+	        float colisionX=futurX;
+	        float colisionY=futurY;
+	        switch (this.direction) {
+	        //On consid�re toujours les pieds d'ou le +64 et -16 pour le d�calage
+	        case 0: futurY = this.y - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
+	        case 1: futurX = this.x - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break; 
+	        case 2: futurY = this.y + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
+	        case 3: futurX = this.x + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break; 
+	        }
+	        Image tile = this.map.getTileImage(
+	                (int) colisionX / this.map.getTileWidth(), 
+	                (int) colisionY / this.map.getTileHeight(), 
+	                this.map.getLayerIndex("blocker"));
+	        boolean collision = (tile != null); 
+	        
+	        if (collision) {
+	        	// il y a toujours collision si il y a un pixel non transparent dans la tuile 
+	            Color color = tile.getColor(
+	                    (int) colisionX % this.map.getTileWidth(), 
+	                    (int) colisionY % this.map.getTileHeight());
+	            collision = color.getAlpha() > 0;
+	        } 
+	        if (collision) {
+	            this.moving = false;
+	        } else {
+	            this.x = futurX;
+	            this.y = futurY;
+	        }
+			
+			
 			this.xCamera = this.x;
 			this.yCamera = this.y;
 
@@ -122,6 +151,7 @@ public class WindowGame extends BasicGame {
 		for (int x = startX; x < endX; x++) {
 			animation.addFrame(spriteSheet.getSprite(x, y), 100);
 		}
+		animation.setAutoUpdate(true);
 		return animation;
 	}
 

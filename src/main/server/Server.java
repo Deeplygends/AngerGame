@@ -37,10 +37,7 @@ public class Server {
 	            	   System.out.println("Waiting for client ...");
 	            	   Socket client = serverSocket.accept();
 	                  
-	                  //Une fois re�ue, on la traite dans un thread s�par�
-	                  System.out.println("Connexion cliente re�ue.");                  
-	                  Thread t = new Thread(new ClientProcessor(client));
-	                  t.start();
+
 	                  
 	               } catch (IOException e) {
 	                  e.printStackTrace();
