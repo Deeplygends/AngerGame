@@ -53,7 +53,7 @@ public class Client extends Thread {
 						try{
 							String s = in.readLine();
 							if (s.indexOf("(")!=-1) {
-								//w.setPersonnage(parseName(s), parsePosition(s));
+								//w.setPersonnage(parseName(s), parsePosition(s));   POUR LAFFICHAGE
 								System.out.println(parsePosition(s).getCenterX());
 							}
 							System.out.println(s);
