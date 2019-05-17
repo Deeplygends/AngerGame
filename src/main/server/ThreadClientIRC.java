@@ -55,6 +55,7 @@ public class ThreadClientIRC extends Thread {
 				}
 				else{
 					serv.EnvoyerATous(req);
+					System.out.println(req);
 				}
 
 			}

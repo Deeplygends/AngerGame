@@ -1,5 +1,6 @@
 package main.client;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Scanner;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -31,73 +33,85 @@ public class Client extends Thread {
 	int compteur = 0;
 
 	Thread listener;
+	Thread game;
 	public Client(String nom) {
 		this.nom = nom;
 	}
 
 	public void run() {
 		try {
-			System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
-			new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false).start();
+
 			sc = new Socket(hote, port);
 			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
 			out = new PrintWriter(sc.getOutputStream(), true);
-			Scanner scan = new Scanner(System.in);
+			WindowGame w = new WindowGame("Labyrinthe");
 			listener = new Thread(new Runnable(){
-				
+
 				public void run(){
 					while(true)
 					{
 						try{
 							String s = in.readLine();
+							if (s.indexOf("(")!=-1) {
+								//w.setPersonnage(parseName(s), parsePosition(s));
+								System.out.println(parsePosition(s).getCenterX());
+							}
 							System.out.println(s);
 							
+
 						}catch(IOException e) { }
 					}
 				}
 			});
 			listener.start();
-			String rep = "";
+
+
+			game = new Thread(new Runnable() {
+				public void run() {
+
+					System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
+					try {
+						new AppGameContainer(w, 640, 480, false).start();
+					} catch (SlickException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			game.start();
+
+
+			String coordinates = "";
 			// envoyer le pseudonyme au serveur
 			System.out.println("Ceci est votre nom : " + nom);
 			out.println(nom);
 			// recevoir le message d'accueil du serveur
-		
 
-			
-			
-			while (!rep.equals("/quit")) {
-				rep = scan.nextLine();
-				Calendar cal = Calendar.getInstance();
-       			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-				if(rep.equals("/list") || rep.equals("/oss117"))
-				{
-					out.println(rep);
+
+
+
+			while (true) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				else if(rep.equals("/quit"))
-				{
-					out.println("Bye");
-					rep = "/quit";
-				}
-				else{
-					// recevoir un message du serveur
-					// incrementer le nb d'echanges
-					// repondre au serveur;
-					out.println(nom + ": " + rep);
-					// faire une pause de 3sec
-				}
-				
+				coordinates = w.getCoordinates();
+				//Calendar cal = Calendar.getInstance();
+				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+				out.println(nom + ": " + coordinates);
+
+
 			}
-			// recevoir un message du serveur
-		
-			// faire une pause de 2sec
-			// envoyer un message « Bye » au serveur
-		} catch (IOException | SlickException e) {
+			
+		} catch (IOException e) {
 			System.err.println("Impossible cree socket du client : " + e);
 		}  finally {
 			try {
 				sc.close();
-				
+
 				in.close();
 				out.close();
 			} catch (IOException e) {
@@ -105,7 +119,22 @@ public class Client extends Thread {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static Point parsePosition(String message) {
+		int startx = message.indexOf("(")+1;
+		int endx = message.indexOf(";");
+		Float x = Float.parseFloat(message.substring(startx,endx));
+		int starty = message.indexOf(";")+1;
+		int endy = message.indexOf(")");
+		Float y = Float.parseFloat(message.substring(starty,endy));
+		return new Point(x,y);
+	}
+	
+	public static String parseName(String message) {
+		int end = message.indexOf(":")-1;
+		return message.substring(0,end);
+	}
+	
+	public static void main(String[] args)  {
 		Random r = new Random();
 		String pseudo = "Visitor " + r.nextInt(100000);
 		try {
@@ -115,8 +144,6 @@ public class Client extends Thread {
 				if(!args[2].equals(null) && !args[2].equals(""))
 					pseudo = args[2];
 				Client c = new Client(pseudo);
-				//c.port = Integer.parseInt(args[1]);
-				//c.hote = InetAddress.getByName(args[0]);
 				c.run();
 			} else {
 
@@ -124,7 +151,8 @@ public class Client extends Thread {
 		} catch (UnknownHostException e) {
 			System.err.println("Machine inconnue :" + e);
 		} 
-		
+
+
 	}
 
 

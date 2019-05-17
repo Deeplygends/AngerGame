@@ -3,8 +3,10 @@
  */
 package main.client;
 
+
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.newdawn.slick.Animation;
 
@@ -22,6 +24,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.tiled.TiledMap;
 public class WindowGame extends BasicGame {
 
@@ -34,6 +37,7 @@ public class WindowGame extends BasicGame {
 	private Animation[] animations = new Animation[8];
 	private float xCamera = x, yCamera = y;
 	private final static float speed = (float) 0.3;
+	private HashMap<String,Point> personnages ;
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -73,6 +77,11 @@ public class WindowGame extends BasicGame {
 		g.setColor(new Color(0, 0, 0, .5f));
 		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
 		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
+		
+		/*for (String pers : personnages.keySet()) {
+			g.drawAnimation(animations[0], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     POUR LAFFICHAGE 
+		} */
+		
 		
 		this.map.render(0, 0,2);
 		this.map.render(0, 0,3);
@@ -169,6 +178,15 @@ public class WindowGame extends BasicGame {
 			break;
 		}
 	}
+	
+	public String getCoordinates() {
+		return "("+x+";"+y+")";
+	}
+	
+	public void setPersonnage(String name, Point coordinates) {
+		personnages.put(name, coordinates);
+	}
+	
 
 
 	public static void main(String[] args) throws SlickException {
