@@ -5,7 +5,6 @@ package main.client;
 
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import org.newdawn.slick.Animation;
@@ -37,7 +36,7 @@ public class WindowGame extends BasicGame {
 	private Animation[] animations = new Animation[8];
 	private float xCamera = x, yCamera = y;
 	private final static float speed = (float) 0.3;
-	private HashMap<String,Point> personnages ;
+	private HashMap<String,Point> personnages = new HashMap<String, Point>() ;
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -51,7 +50,7 @@ public class WindowGame extends BasicGame {
 		//Ajout des sprite du joueur principal
 		SpriteSheet spriteSheet = new SpriteSheet(".\\src\\main\\ressources\\character\\personnage.png", 64, 64);
 		//Initialisation des animations du personnage
-		Animation animation = new Animation();
+		//Animation animation = new Animation();
 		this.animations[0] = loadAnimation(spriteSheet, 0, 1, 0);
 		this.animations[1] = loadAnimation(spriteSheet, 0, 1, 1);
 		this.animations[2] = loadAnimation(spriteSheet, 0, 1, 2);
@@ -78,9 +77,9 @@ public class WindowGame extends BasicGame {
 		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
 		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
 		
-		/*for (String pers : personnages.keySet()) {
-			g.drawAnimation(animations[0], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     POUR LAFFICHAGE 
-		} */
+		for (String pers : personnages.keySet()) {
+			g.drawAnimation(animations[0], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     //POUR LAFFICHAGE 
+		} 
 		
 		
 		this.map.render(0, 0,2);
@@ -112,10 +111,10 @@ public class WindowGame extends BasicGame {
 	        
 	        if (collision) {
 	        	// il y a toujours collision si il y a un pixel non transparent dans la tuile 
-	            /*Color color = tile.getColor(
+	            Color color = tile.getColor(
 	                    (int) colisionX % this.map.getTileWidth(), 
 	                    (int) colisionY % this.map.getTileHeight());
-	            collision = color.getAlpha() > 0; */
+	            collision = color.getAlpha() > 0; 
 	        } 
 	        if (collision) {
 	            this.moving = false;

@@ -41,18 +41,6 @@ public class ThreadClientIRC extends Thread {
 					serv.supprimerClient(this);
 					System.exit(0);
 				}
-				else if(req.equals("/list")){
-					serv.EnvoyerListeClients(out);
-				}else if(req.equals("/help"))
-				{
-					Envoyer("/list - Users list");
-				}else if(req.equals("/oss117"))
-				{
-					serv.EnvoyerATous("[Serveur]: Quand une femme change d'homme, elle change de coiffure !");
-				} else if (req.equals("/kick"))
-				{
-					
-				}
 				else{
 					serv.EnvoyerATous(req);
 					System.out.println(req);

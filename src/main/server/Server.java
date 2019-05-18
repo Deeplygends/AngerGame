@@ -2,15 +2,11 @@ package main.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Vector;
-
-import main.client.Client;
 
 public class Server {
 	int port = 4800;

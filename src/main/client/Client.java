@@ -7,20 +7,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
-import java.util.Scanner;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class Client extends Thread {
 	static int port = 4800;
@@ -53,7 +48,7 @@ public class Client extends Thread {
 						try{
 							String s = in.readLine();
 							if (s.indexOf("(")!=-1) {
-								//w.setPersonnage(parseName(s), parsePosition(s));   POUR LAFFICHAGE
+								w.setPersonnage(parseName(s), parsePosition(s));  // POUR LAFFICHAGE
 								System.out.println(parsePosition(s).getCenterX());
 							}
 							System.out.println(s);
