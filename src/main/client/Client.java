@@ -63,10 +63,12 @@ public class Client extends Thread {
 
 			game = new Thread(new Runnable() {
 				public void run() {
-
+					
 					System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 					try {
-						new AppGameContainer(w, 640, 480, false).start();
+						AppGameContainer app = new AppGameContainer(w, 640, 480, false);
+						app.setTargetFrameRate(120);
+						app.start();
 					} catch (SlickException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -97,7 +99,8 @@ public class Client extends Thread {
 				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
 				out.println(nom + ": " + coordinates);
-
+				if(w.asWin())
+				
 
 			}
 			

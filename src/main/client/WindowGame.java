@@ -30,7 +30,7 @@ public class WindowGame extends BasicGame {
 	private GameContainer container;
 	private TiledMap map;
 	private float mapWidth = 1024, mapHeight = 1024;
-	private float x = 350, y = 300;
+	private float x = 800, y = 640;
 	private int direction = 2;
 	private boolean moving = false;
 	private Animation[] animations = new Animation[8];
@@ -46,7 +46,7 @@ public class WindowGame extends BasicGame {
 	public void init(GameContainer container) throws SlickException
 	{
 		this.container = container;
-		this.map = new TiledMap(".\\src\\main\\ressources\\map\\test.tmx");
+		this.map = new TiledMap(".\\src\\main\\ressources\\map\\labyrinthe.tmx");
 		//Ajout des sprite du joueur principal
 		SpriteSheet spriteSheet = new SpriteSheet(".\\src\\main\\ressources\\character\\personnage.png", 64, 64);
 		//Initialisation des animations du personnage
@@ -73,17 +73,15 @@ public class WindowGame extends BasicGame {
 				container.getHeight() / 2 - (int) this.yCamera);
 		this.map.render(0, 0,0);
 		this.map.render(0, 0,1);
+		this.map.render(0, 0,2);
 		g.setColor(new Color(0, 0, 0, .5f));
 		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
 		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
 		
 		for (String pers : personnages.keySet()) {
-			g.drawAnimation(animations[0], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     //POUR LAFFICHAGE 
+			g.drawAnimation(animations[2], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     //POUR LAFFICHAGE 
 		} 
 		
-		
-		this.map.render(0, 0,2);
-		this.map.render(0, 0,3);
 	}
 
 	@Override
@@ -94,7 +92,7 @@ public class WindowGame extends BasicGame {
 	        float colisionX=futurX;
 	        float colisionY=futurY;
 	        switch (this.direction) {
-	        //On considère toujours les pieds d'ou le +64 et -16 pour le décalage
+	        //On considï¿½re toujours les pieds d'ou le +64 et -16 pour le dï¿½calage
 	        case 0: futurY = this.y - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
 	        case 1: futurX = this.x - speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break; 
 	        case 2: futurY = this.y + speed * delta;colisionX=futurX+32-16;colisionY=futurY+64-16; break;
@@ -106,7 +104,7 @@ public class WindowGame extends BasicGame {
 	        Image tile = this.map.getTileImage(
 	                (int) colisionX / this.map.getTileWidth(), 
 	                (int) colisionY / this.map.getTileHeight(), 
-	                this.map.getLayerIndex("blocker"));
+	                this.map.getLayerIndex("block"));
 	        boolean collision = (tile != null); 
 	        
 	        if (collision) {
@@ -186,11 +184,19 @@ public class WindowGame extends BasicGame {
 		personnages.put(name, coordinates);
 	}
 	
-
-
+	public boolean asWin()
+	{
+		if(this.map.getTileImage((int)x / this.map.getTileWidth(), 
+				(int)y / this.map.getTileHeight(),this.map.getLayerIndex("finnish"))!=null)
+			return true;
+		return false;
+	}
+	
 	public static void main(String[] args) throws SlickException {
 		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
-		new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false).start();
+		AppGameContainer app = new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false);
+		app.setTargetFrameRate(120);
+		app.start();
 	}
 
 
