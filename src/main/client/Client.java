@@ -79,6 +79,7 @@ public class Client extends Thread {
 
 
 			String coordinates = "";
+			boolean victorious = false;
 			// envoyer le pseudonyme au serveur
 			System.out.println("Ceci est votre nom : " + nom);
 			out.println(nom);
@@ -89,17 +90,21 @@ public class Client extends Thread {
 
 			while (true) {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				coordinates = w.getCoordinates();
+				victorious = w.getVictorious();
 				//Calendar cal = Calendar.getInstance();
 				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
 				out.println(nom + ": " + coordinates);
-				if(w.asWin())
+				if (victorious) {
+					out.println(nom + "- "+ "won");
+				}
+			
 				
 
 			}
