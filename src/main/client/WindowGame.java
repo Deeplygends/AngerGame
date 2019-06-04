@@ -38,8 +38,9 @@ public class WindowGame extends BasicGame {
 	private String nom = "";
 	private Animation[] animations = new Animation[8];
 	private float xCamera = x, yCamera = y;
-	private final static float speed = (float) 0.3;
+	private final static float speed = (float) 0.9;
 	private HashMap<String,Point> personnages = new HashMap<String, Point>() ;
+	private boolean victorious = false;
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -110,7 +111,19 @@ public class WindowGame extends BasicGame {
 	                (int) colisionX / this.map.getTileWidth(), 
 	                (int) colisionY / this.map.getTileHeight(), 
 	                this.map.getLayerIndex("block"));
+	        
+	        Image tileVictoire = this.map.getTileImage(
+	                (int) colisionX / this.map.getTileWidth(), 
+	                (int) colisionY / this.map.getTileHeight(), 
+	                this.map.getLayerIndex("finnish"));
 	        boolean collision = (tile != null); 
+	       
+	        
+	        boolean victoire = (tileVictoire != null);
+	        
+	        if (victoire) {
+	        	victorious = true;
+	        }
 	        
 	        if (collision) {
 	        	// il y a toujours collision si il y a un pixel non transparent dans la tuile 
@@ -188,20 +201,15 @@ public class WindowGame extends BasicGame {
 	public void setPersonnage(String name, Point coordinates) {
 		personnages.put(name, coordinates);
 	}
+
 	public void setName(String nom)
 	{
 		this.nom = nom;
 	}
-	public Set<String> players()
-	{
-		return personnages.keySet();
-	}
-	public boolean asWin()
-	{
-		if(this.map.getTileImage((int)x / this.map.getTileWidth(), 
-				(int)y / this.map.getTileHeight(),this.map.getLayerIndex("finnish"))!=null)
-			return true;
-		return false;
+
+	
+	public boolean getVictorious() {
+		return victorious;
 	}
 	
 	public static void main(String[] args) throws SlickException {
