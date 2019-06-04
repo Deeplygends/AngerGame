@@ -6,6 +6,8 @@ package main.client;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import org.newdawn.slick.Animation;
 
@@ -33,6 +35,7 @@ public class WindowGame extends BasicGame {
 	private float x = 800, y = 640;
 	private int direction = 2;
 	private boolean moving = false;
+	private String nom = "";
 	private Animation[] animations = new Animation[8];
 	private float xCamera = x, yCamera = y;
 	private final static float speed = (float) 0.3;
@@ -77,9 +80,11 @@ public class WindowGame extends BasicGame {
 		g.setColor(new Color(0, 0, 0, .5f));
 		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
 		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
+		g.drawString(nom, x, y-20);
 		
 		for (String pers : personnages.keySet()) {
 			g.drawAnimation(animations[2], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     //POUR LAFFICHAGE 
+			g.drawString(pers, personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY()-10);
 		} 
 		
 	}
@@ -183,7 +188,14 @@ public class WindowGame extends BasicGame {
 	public void setPersonnage(String name, Point coordinates) {
 		personnages.put(name, coordinates);
 	}
-	
+	public void setName(String nom)
+	{
+		this.nom = nom;
+	}
+	public Set<String> players()
+	{
+		return personnages.keySet();
+	}
 	public boolean asWin()
 	{
 		if(this.map.getTileImage((int)x / this.map.getTileWidth(), 

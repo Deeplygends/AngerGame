@@ -21,36 +21,31 @@ public class ThreadClientIRC extends Thread {
 
 	@Override
 	public void run() {
+		String req = "";
 		try {
+			System.out.println("Initialisation of Client thread");
 			in = new BufferedReader(new InputStreamReader(ssv.getInputStream()));
 			out = new PrintWriter(ssv.getOutputStream(),true);
-			String req = in.readLine();
+			System.out.println("Waiting req in");
+			req = in.readLine();
+			System.out.println("Set Name :" + req);
 			setNom(req);
-			// envoi un premier message d'accueil …
-			serv.EnvoyerATous("[Serveur] : " + getNom() +  " vient de se connecter...");
-				
-			Envoyer("####  Bonjour bienvenue sur le serveur IRC de Micky  ####");
-			// envoi la liste des clients connectes …
+			System.out.println("send every player connected to all");
 			serv.EnvoyerListeClients(out);
 			while (true) {
 				
-				// attendre un phrase de reponse …
+				// attendre un phrase de reponse ï¿½
 				req = in.readLine();
-				if (req.equals("/quit")) {
-					serv.EnvoyerATous(nom + " vient de se deconnecter ...");
-					serv.supprimerClient(this);
-					System.exit(0);
-				}
-				else{
-					serv.EnvoyerATous(req);
-					System.out.println(req);
-				}
+				serv.EnvoyerATous(req);
+				System.out.println(req);
+				System.out.println("pause");
 
 			}
 
 		} catch (IOException e) {
-			System.err.println("Erreur : " + e);
-		} finally {
+			System.err.println("Erreur IO : " + e);
+		}
+		finally {
 			try {
 				ssv.close();
 				in.close();

@@ -83,13 +83,13 @@ public class Client extends Thread {
 			System.out.println("Ceci est votre nom : " + nom);
 			out.println(nom);
 			// recevoir le message d'accueil du serveur
-
+			w.setName(nom);
 
 
 
 			while (true) {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -97,10 +97,15 @@ public class Client extends Thread {
 				coordinates = w.getCoordinates();
 				//Calendar cal = Calendar.getInstance();
 				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-
+				System.out.println(coordinates);
 				out.println(nom + ": " + coordinates);
-				if(w.asWin())
-				
+				/*if(w.asWin())
+				{
+					System.out.println("Win");
+					//out.println(nom + " GG");
+				}*/
+				for(String s : w.players())
+					System.out.println("Adversaire : " + s);
 
 			}
 			
@@ -128,7 +133,7 @@ public class Client extends Thread {
 	}
 	
 	public static String parseName(String message) {
-		int end = message.indexOf(":")-1;
+		int end = message.indexOf(":");
 		return message.substring(0,end);
 	}
 	

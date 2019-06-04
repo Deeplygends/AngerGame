@@ -53,11 +53,12 @@ public class Server {
 	synchronized public void EnvoyerATous(String s) {
 		Calendar cal = Calendar.getInstance();
        	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+       	if(s != null)
 		for(ThreadClientIRC c : V)
 		{
 			if(s.split(":") != null)
 				if(!s.split(":")[0].equals(c.getNom()))
-					c.Envoyer("["+sdf.format(cal.getTime()) + "] " + s);
+					c.Envoyer(s);
 		}
 	}
 
