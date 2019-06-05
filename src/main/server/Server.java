@@ -46,9 +46,13 @@ public class Server {
 				System.out.println("New Client ...");
 				synchronized(V)
 				{
+					System.out.println("creating thread");
 					ThreadClientIRC th = new ThreadClientIRC(ssv, this);
+					System.out.println("starting thread");
 					th.start();
+					System.out.println("adding thread");
 					ajouterClient(th);
+					System.out.println("end synchronized");
 				}
 				
 			}

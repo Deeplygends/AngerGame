@@ -93,24 +93,25 @@ public class Client extends Thread {
 						e.printStackTrace();
 					}
 					coordinates = w.getCoordinates();
-					//System.out.println( "coordonnées : " + coordinates);
+					System.out.println( "coordonnées : " + coordinates);
 					victorious = w.getVictorious();
 					out.println(nom + ": " + coordinates);
 					if (victorious && !send) {
 						out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
 						send = true;
 					}
-					if(replay == "yes" && victorious)
+					if(replay == "yes" && victorious && send)
 					{
 						again = true;
 						break;
 					}
-					else if(replay == "no" && victorious)
+					else if(replay == "no" && victorious && send)
 					{
 						again = false;
 						break;
 					}
 				}
+				send = false;
 				Thread.sleep(3000);
 				System.out.println("End of game -> Retry : " + w.replay);
 				w.keyReleased(Input.KEY_ESCAPE, 'c');

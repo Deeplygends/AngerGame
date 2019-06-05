@@ -54,6 +54,7 @@ public class WindowGame extends BasicGame {
 	public String replay = "wait";
 	public WindowGame(String title) {
 		super(title);
+		Monitored = new Object();
 		// TODO Auto-generated constructor stub
 	}
 	public void exit()
@@ -157,6 +158,7 @@ public class WindowGame extends BasicGame {
 	        boolean victoire = (tileVictoire != null);
 	        
 	        if (victoire && victorious != true) {
+	        	System.out.println(victoire);
 	        	victorious = true;
 	        	end = Instant.now();
 	        }
@@ -187,10 +189,8 @@ public class WindowGame extends BasicGame {
 
 
 		}
-		else
-		{
-			current = Instant.now();
-		}
+	
+		current = Instant.now();
 	}
 	/**
 	 * Gere quand une touche est relachée
@@ -245,12 +245,14 @@ public class WindowGame extends BasicGame {
 					victorious = false;
 					x = 800;
 					y = 640;
-					xCamera = x - mapWidth;
-					yCamera = y - mapHeight;
+					xCamera = x + mapWidth;
+					yCamera = y + mapHeight;
 					start = Instant.now();
+					current = Instant.now();
+					end = null;
 				}
 			}
-			if(key == Input.KEY_N && victorious)
+			else if(key == Input.KEY_N && victorious)
 			{
 				replay = "no";
 			}
@@ -273,6 +275,8 @@ public class WindowGame extends BasicGame {
 	public boolean getVictorious() {
 		synchronized(Monitored)
 		{
+			if(victorious)
+				System.out.println(victorious + " at timer : " + getTimer());
 			return victorious;
 		}
 	}
@@ -285,10 +289,24 @@ public class WindowGame extends BasicGame {
 	
 	public void updateBoard(Final f)
 	{
-		HashMap<Integer, Final> tmp = new HashMap<>();
 		synchronized(Monitored)
 		{
-			board.add(f);
+			Final tmp = null;
+			for(Final ele : board)
+			{
+				if(ele.name == nom)
+				{
+					tmp = ele;
+				}
+			}
+			if(tmp == null)
+				board.add(f);
+			else if(tmp.compareTo(f) > 0)
+			{
+				board.remove(tmp);
+				board.add(f);
+			}
+			System.out.println("board size : " + board.size());
 			Collections.sort(board);
 		}
 		

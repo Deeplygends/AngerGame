@@ -17,6 +17,10 @@ public class Final implements Comparable<Final>{
 	@Override
 	public int compareTo(Final f) {
 		// TODO Auto-generated method stub
-		return (int)(this.timer.getSeconds() - f.timer.getSeconds());
+		int i = (int)(this.timer.getSeconds() - f.timer.getSeconds());
+				if(i != 0)
+						return i;
+				else
+					return (int)(this.timer.getNano() - f.timer.getNano());
 	}
 }
