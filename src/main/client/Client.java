@@ -36,6 +36,7 @@ public class Client extends Thread {
 	App game;
 	String replay;
 	boolean again = true;
+	boolean allFinnish;
 	
 	public Client(String nom) {
 		this.nom = nom;
@@ -52,8 +53,11 @@ public class Client extends Thread {
 			while(again)
 			{
 				gameplay++;
+				again = false;
+				boolean victorious = false;
+				allFinnish = false;
 			//Game Start
-				System.out.println("Game Start");
+				System.out.println("Game Start " + gameplay);
 				if(gameplay < 2)
 				{
 					
@@ -69,7 +73,7 @@ public class Client extends Thread {
 
 
 			String coordinates = "";
-			boolean victorious = false;
+			
 			// envoyer le pseudonyme au serveur
 			System.out.println("Ceci est votre nom : " + nom);
 			if(gameplay < 2)
@@ -81,7 +85,7 @@ public class Client extends Thread {
 
 
 
-				while (true) {
+			while (true) {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -89,23 +93,25 @@ public class Client extends Thread {
 						e.printStackTrace();
 					}
 					coordinates = w.getCoordinates();
+					//System.out.println( "coordonnées : " + coordinates);
 					victorious = w.getVictorious();
 					out.println(nom + ": " + coordinates);
 					if (victorious && !send) {
 						out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
 						send = true;
 					}
-					if(w.replay == "yes")
+					if(replay == "yes" && victorious)
 					{
 						again = true;
 						break;
 					}
-					else if(w.replay == "no")
+					else if(replay == "no" && victorious)
 					{
 						again = false;
 						break;
 					}
 				}
+				Thread.sleep(3000);
 				System.out.println("End of game -> Retry : " + w.replay);
 				w.keyReleased(Input.KEY_ESCAPE, 'c');
 			}

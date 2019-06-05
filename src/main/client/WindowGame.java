@@ -49,6 +49,7 @@ public class WindowGame extends BasicGame {
 	private Instant current;
 	private Instant start;
 	private Instant end;
+	public Object Monitored = new Object();
 	
 	public String replay = "wait";
 	public WindowGame(String title) {
@@ -112,7 +113,7 @@ public class WindowGame extends BasicGame {
 			g.setColor(new Color(255,255,255));
 			g.drawString("Tableau des scores", xCamera-100, yCamera-200);
 			float vertical = yCamera-200;
-			synchronized(board)
+			synchronized(Monitored)
 			{
 				for(Final s : board)
 				{
@@ -224,23 +225,35 @@ public class WindowGame extends BasicGame {
 
 	@Override
 	public void keyPressed(int key, char c) {
-		switch (key) {
-		case Input.KEY_UP:    this.direction = 0; this.moving = true; break;
-		case Input.KEY_LEFT:  this.direction = 1; this.moving = true; break;
-		case Input.KEY_DOWN:  this.direction = 2; this.moving = true; break;
-		case Input.KEY_RIGHT: this.direction = 3; this.moving = true; break;
-		default:
-			break;
-		}
-		
-		if(key == Input.KEY_Y && victorious) 
+		if(!victorious)
 		{
-			replay = "yes";
+			switch (key) {
+			case Input.KEY_UP:    this.direction = 0; this.moving = true; break;
+			case Input.KEY_LEFT:  this.direction = 1; this.moving = true; break;
+			case Input.KEY_DOWN:  this.direction = 2; this.moving = true; break;
+			case Input.KEY_RIGHT: this.direction = 3; this.moving = true; break;
+			default:
+				break;
+			}
 		}
-		if(key == Input.KEY_N && victorious)
-		{
-			replay = "no";
-		}
+		else
+			if(key == Input.KEY_Y && victorious) 
+			{
+				synchronized(Monitored)
+				{
+					replay = "yes";
+					victorious = false;
+					x = 800;
+					y = 640;
+					xCamera = x - mapWidth;
+					yCamera = y - mapHeight;
+					start = Instant.now();
+				}
+			}
+			if(key == Input.KEY_N && victorious)
+			{
+				replay = "no";
+			}
 	}
 	
 	public String getCoordinates() {
@@ -258,7 +271,10 @@ public class WindowGame extends BasicGame {
 
 	
 	public boolean getVictorious() {
-		return victorious;
+		synchronized(Monitored)
+		{
+			return victorious;
+		}
 	}
 	public Duration getDuration()
 	{
@@ -270,7 +286,7 @@ public class WindowGame extends BasicGame {
 	public void updateBoard(Final f)
 	{
 		HashMap<Integer, Final> tmp = new HashMap<>();
-		synchronized(board)
+		synchronized(Monitored)
 		{
 			board.add(f);
 			Collections.sort(board);
@@ -296,6 +312,10 @@ public class WindowGame extends BasicGame {
 		AppGameContainer app = new AppGameContainer(new WindowGame("Labyrinthe"), 640, 480, false);
 		app.setTargetFrameRate(120);
 		app.start();
+	}
+	public void removePlayer(String string) {
+		personnages.remove(string);
+		
 	}
 
 

@@ -49,6 +49,7 @@ public class Watcher extends Thread{
 					{
 						System.out.println(th.nom +" disconnected");
 						serv.supprimerClient(th);
+						serv.EnvoyerATous(th.nom + " - disconnected");
 					}
 					serv.disconnect.clear();
 				}

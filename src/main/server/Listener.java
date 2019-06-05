@@ -35,16 +35,16 @@ public class Listener extends Thread{
 						w.updateBoard(f);
 						System.out.println(f.name + " - " + f.getTimer() + " - " +f.timer.getSeconds());
 					}
+					else if(s.split("-").length == 2)
+					{
+						w.removePlayer(s.split("-")[0]);
+					}
 				
 
 			}catch(IOException e) { }
 		}
 	}
 	
-	public void cancel()
-	{
-		kill = true;
-	}
 	public Point parsePosition(String message) {
 		int startx = message.indexOf("(")+1;
 		int endx = message.indexOf(";");
