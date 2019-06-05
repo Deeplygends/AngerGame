@@ -49,14 +49,20 @@ public class WindowGame extends BasicGame {
 	private Instant current;
 	private Instant start;
 	private Instant end;
+	
+	public String replay = "wait";
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
-
+	public void exit()
+	{
+		container.exit();
+	}
 	@Override
 	public void init(GameContainer container) throws SlickException
 	{
+		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 		this.container = container;
 		this.map = new TiledMap(".\\src\\main\\ressources\\map\\labyrinthe.tmx");
 		//Ajout des sprite du joueur principal
@@ -225,6 +231,15 @@ public class WindowGame extends BasicGame {
 		case Input.KEY_RIGHT: this.direction = 3; this.moving = true; break;
 		default:
 			break;
+		}
+		
+		if(key == Input.KEY_Y && victorious) 
+		{
+			replay = "yes";
+		}
+		if(key == Input.KEY_N && victorious)
+		{
+			replay = "no";
 		}
 	}
 	

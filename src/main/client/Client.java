@@ -12,8 +12,11 @@ import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.Random;
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
+
+import main.server.Listener;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -27,99 +30,95 @@ public class Client extends Thread {
 	String nom;
 	List<String> tampon = new ArrayList<>();
 	int compteur = 0;
+	int gameplay = 0;
 	boolean send = false;
-	Thread listener;
-	Thread game;
+	Listener listener;
+	App game;
+	String replay;
+	boolean again = true;
+	
 	public Client(String nom) {
 		this.nom = nom;
 	}
 
 	public void run() {
 		try {
-
+			replay = "wait";
+			
 			sc = new Socket(hote, port);
 			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
 			out = new PrintWriter(sc.getOutputStream(), true);
 			WindowGame w = new WindowGame("Labyrinthe");
-			listener = new Thread(new Runnable(){
-
-				public void run(){
-					while(true)
-					{
-						try{
-							String s = in.readLine();
-							if (s.indexOf("(")!=-1 && s.split(":").length == 2) {
-								w.setPersonnage(parseName(s), parsePosition(s));  // POUR LAFFICHAGE
-							}
-							else if(s.split("-").length == 3)
-							{
-								Final f = new Final();
-								f.name = s.split("-")[0];
-								f.timer = Duration.parse(s.split("-")[2]);
-								w.updateBoard(f);
-								System.out.println(f.name + " - " + f.getTimer() + " - " +f.timer.getSeconds());
-							}
-							
-
-						}catch(IOException e) { }
-					}
-				}
-			});
-			listener.start();
-
-
-			game = new Thread(new Runnable() {
-				public void run() {
+			while(again)
+			{
+				gameplay++;
+			//Game Start
+				System.out.println("Game Start");
+				if(gameplay < 2)
+				{
 					
-					System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
-					try {
-						AppGameContainer app = new AppGameContainer(w, 640, 480, false);
-						app.setTargetFrameRate(120);
-						app.start();
-					} catch (SlickException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					listener = new Listener(w, in);
+
+					game = new App(w);
+					listener.start();
+					System.out.println("start game");
+					game.start();
 				}
-			});
-			game.start();
+	
+			
 
 
 			String coordinates = "";
 			boolean victorious = false;
 			// envoyer le pseudonyme au serveur
 			System.out.println("Ceci est votre nom : " + nom);
-			out.println(nom);
-			// recevoir le message d'accueil du serveur
-			w.setName(nom);
+			if(gameplay < 2)
+			{
+				out.println(nom);
+				// recevoir le message d'accueil du serveur
+				w.setName(nom);
+			}
 
 
 
-			while (true) {
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				while (true) {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					coordinates = w.getCoordinates();
+					victorious = w.getVictorious();
+					out.println(nom + ": " + coordinates);
+					if (victorious && !send) {
+						out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
+						send = true;
+					}
+					if(w.replay == "yes")
+					{
+						again = true;
+						break;
+					}
+					else if(w.replay == "no")
+					{
+						again = false;
+						break;
+					}
 				}
-				coordinates = w.getCoordinates();
-				victorious = w.getVictorious();
-				out.println(nom + ": " + coordinates);
-				if (victorious && !send) {
-					out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
-					send = true;
-				}
-			
-				
-
+				System.out.println("End of game -> Retry : " + w.replay);
+				w.keyReleased(Input.KEY_ESCAPE, 'c');
 			}
 			
 		} catch (IOException e) {
 			System.err.println("Impossible cree socket du client : " + e);
-		}  finally {
+		}  catch(Exception e){
+			System.err.println("Erreur " + e);
+		}finally {
+		
 			try {
+				System.out.println("closing socket");
 				sc.close();
-
 				in.close();
 				out.close();
 			} catch (IOException e) {

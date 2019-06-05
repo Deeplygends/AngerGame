@@ -34,14 +34,22 @@ public class ThreadClientIRC extends Thread {
 			serv.EnvoyerListeClients(out);
 			while (true) {
 				
-				// attendre un phrase de reponse �
-				req = in.readLine();
-				serv.EnvoyerATous(req);
+				// attendre un phrase de reponse
+				if(in == null)
+					System.out.println("In is null");
+				else
+				{
+					req = in.readLine();
+					serv.EnvoyerATous(req);
+				}
 
 			}
 
 		} catch (IOException e) {
 			System.err.println("Erreur IO : " + e);
+		} catch(Exception e)
+		{
+			System.err.println("Erreur Reseau : " + e);
 		}
 		finally {
 			try {

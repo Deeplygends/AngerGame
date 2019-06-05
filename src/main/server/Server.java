@@ -5,29 +5,51 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Vector;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Server {
 	int port = 4800;
 	ServerSocket se = null;
 	Socket ssv = null;
-	int cl = 0;
-	Vector<ThreadClientIRC> V;
-
+	public int cl = 0;
+	public int wait = 0;
+	public ArrayDeque<ThreadClientIRC> waitingList = new ArrayDeque<ThreadClientIRC>();
+	public Vector<ThreadClientIRC> V;
+	public boolean running = true;
+	public ArrayList<ThreadClientIRC> disconnect = new ArrayList<>();
 	public Server() {
 		try {
 			V = new Vector<>();
 			se = new ServerSocket(port);
+			System.out.println("open Socket");
+			Watcher watch = new Watcher(this);
+			System.out.println("Run watcher");
+			watch.start();
+			System.out.println("watcher running ...");
 			while (true) {
-
-				System.out.println("Socket open ... Waiting ...");
-				ssv = se.accept();
-				System.out.println("New Client ...");
-				cl++;
+				/*
+				System.out.println("Waiting for connection ...");
+				ssv = se.accept(); //bloquant
+				System.out.println("Client connect");
 				ThreadClientIRC th = new ThreadClientIRC(ssv, this);
-				ajouterClient(th);
-				th.start();
+				waitingList.add(th);
+				wait++;
+				*/
+				/*
+				 *fonctionnelle */
+				System.out.println("Socket open ... Waiting ...");
+				ssv = se.accept(); //bloquant
+				System.out.println("New Client ...");
+				synchronized(V)
+				{
+					ThreadClientIRC th = new ThreadClientIRC(ssv, this);
+					th.start();
+					ajouterClient(th);
+				}
 				
 			}
 		} catch (IOException e) {
@@ -43,6 +65,7 @@ public class Server {
 
 	public void ajouterClient(ThreadClientIRC c) {
 		V.addElement(c);
+		cl++;
 	}
 
 	synchronized public void supprimerClient(ThreadClientIRC c) {
