@@ -30,8 +30,7 @@ public class ThreadClientIRC extends Thread {
 			req = in.readLine();
 			System.out.println("Set Name :" + req);
 			setNom(req);
-			System.out.println("send every player connected to all");
-			serv.EnvoyerListeClients(out);
+			serv.envoyerBoard(this);
 			while (true) {
 				
 				// attendre un phrase de reponse
@@ -40,6 +39,7 @@ public class ThreadClientIRC extends Thread {
 				else
 				{
 					req = in.readLine();
+					System.out.println(req);
 					serv.EnvoyerATous(req);
 				}
 

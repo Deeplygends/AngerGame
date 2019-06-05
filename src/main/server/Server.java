@@ -22,7 +22,7 @@ public class Server {
 	public int wait = 0;
 	public ArrayDeque<ThreadClientIRC> waitingList = new ArrayDeque<ThreadClientIRC>();
 	public Vector<ThreadClientIRC> V;
-	public boolean running = true;
+	public boolean running = false;
 	public ArrayList<ThreadClientIRC> disconnect = new ArrayList<>();
 	public HashMap<String, Duration> board = new HashMap<>();
 	public Server() {
@@ -52,17 +52,18 @@ public class Server {
 				{
 					System.out.println("creating thread");
 					ThreadClientIRC th = new ThreadClientIRC(ssv, this);
-					System.out.println("starting thread");
-					th.start();
 					System.out.println("adding thread");
 					ajouterClient(th);
 					System.out.println("end synchronized");
-					
 				}
 				
 			}
 		} catch (IOException e) {
 			System.err.println("Erreur : " + e);
+		}
+		catch(Exception e)
+		{
+			
 		}
 		finally {
 			try {
@@ -75,6 +76,7 @@ public class Server {
 	public void ajouterClient(ThreadClientIRC c) {
 		V.addElement(c);
 		cl++;
+		c.start();
 	}
 
 	synchronized public void supprimerClient(ThreadClientIRC c) {
@@ -84,17 +86,25 @@ public class Server {
 
 	synchronized public void EnvoyerATous(String s) {
        	if(s != null)
-			for(ThreadClientIRC c : V)
-			{
-				if(s.split(":") != null && s.split(":").length == 2)
-					if(!s.split(":")[0].equals(c.getNom()))
-						c.Envoyer(s);
-				if(s.split("-") != null && s.split("-").length == 3)
+       		if(V.size() != 0)
+       		{
+       			
+				for(ThreadClientIRC c : V)
 				{
-					updateBoard(s);
-					c.Envoyer(s);
+					if(s.split(":") != null && s.split(":").length == 2)
+						if(!s.split(":")[0].equals(c.getNom()))
+							c.Envoyer(s);
+					if(s.split("-") != null && s.split("-").length == 3)
+					{
+						System.out.println(s);
+						System.out.println("update launch");
+						updateBoard(s);
+						//System.out.println(board.get("Deeply"));
+						c.Envoyer(s);
+					}
 				}
-			}
+       		}
+
 	}
 
 	synchronized public void EnvoyerListeClients(PrintWriter out) {
@@ -111,9 +121,20 @@ public class Server {
 	
 	synchronized void updateBoard(String s)
 	{
-		if(s.split("-").length == 3)
+		String[] split = s.split("-");
+		if(split.length == 3)
 		{
-			board.put(s.split("-")[0], Duration.parse(s.split("-")[2]));
+			Duration tmp = Duration.parse(split[2]);
+			if(board.keySet().contains(split[0]))
+			{
+				if(board.get(split[0]).compareTo(tmp) > 0)
+				{
+					System.out.println("Old : " + board.get(split[0]).getSeconds() + "New record : " + tmp.getSeconds());
+					board.put(split[0], tmp);
+				}
+			}
+			else
+				board.put(split[0], tmp);
 		}
 			
 	}
@@ -123,7 +144,8 @@ public class Server {
 		for(String t : board.keySet())
 		{
 			String mess = t;
-			mess += "-" + board.get(t).toString();
+			mess += "-won-" + board.get(t).toString();
+			System.out.println(mess);
 			th.Envoyer(mess);
 		}
 	}
