@@ -5,6 +5,10 @@ package main.client;
 
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +44,11 @@ public class WindowGame extends BasicGame {
 	private float xCamera = x, yCamera = y;
 	private final static float speed = (float) 0.9;
 	private HashMap<String,Point> personnages = new HashMap<String, Point>() ;
+	private ArrayList<Final> board = new ArrayList<>();
 	private boolean victorious = false;
+	private Instant current;
+	private Instant start;
+	private Instant end;
 	public WindowGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -63,36 +71,56 @@ public class WindowGame extends BasicGame {
 		this.animations[5] = loadAnimation(spriteSheet, 1, 9, 1);
 		this.animations[6] = loadAnimation(spriteSheet, 1, 9, 2);
 		this.animations[7] = loadAnimation(spriteSheet, 1, 9, 3);
-		
-
-
+		start = Instant.now();
+		current = Instant.now();
 	}
 	/***
 	 * Generation de l'affichage de tous les éléments (Map, Personnages, etc)
 	 */
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
-
+		
 		g.translate(container.getWidth() / 2 - (int) this.xCamera, 
 				container.getHeight() / 2 - (int) this.yCamera);
-		this.map.render(0, 0,0);
-		this.map.render(0, 0,1);
-		this.map.render(0, 0,2);
+		this.map.render(0, 0, 0);
+		this.map.render(0, 0, 1);
+		this.map.render(0, 0, 2);
 		g.setColor(new Color(0, 0, 0, .5f));
 		g.fillOval(x , y + 40, 32, 16);  //ombre sous le perso
 		g.drawAnimation(animations[direction + (moving ? 4 : 0)], x-16, y-16); //DECALAGE DE 16
 		g.drawString(nom, x, y-20);
 		
 		for (String pers : personnages.keySet()) {
-			g.drawAnimation(animations[2], personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY());     //POUR LAFFICHAGE 
+			g.drawAnimation(animations[2], personnages.get(pers).getCenterX()-16, personnages.get(pers).getCenterY()-16);     //POUR LAFFICHAGE 
 			g.drawString(pers, personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY()-10);
 		} 
+		g.setColor(new Color(255,255,255));
+		g.fillRect(xCamera-30, yCamera-230,150,25);
+		g.setColor(new Color(0,0,0));
+
+		g.drawString(getTimer(),xCamera-30, yCamera-230);
+		
+		if(victorious)
+		{
+			g.fillRect(xCamera-200,yCamera-200,400, 400);
+			g.setColor(new Color(255,255,255));
+			g.drawString("Tableau des scores", xCamera-100, yCamera-200);
+			float vertical = yCamera-200;
+			synchronized(board)
+			{
+				for(Final s : board)
+				{
+					vertical += 25;
+					g.drawString((board.indexOf(s)+1)+". " + s.name + " " + s.getTimer(), xCamera-60, vertical);
+				}
+			}
+		}
 		
 	}
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
-		if (this.moving) {
+		if (this.moving && !victorious) {
 			float futurX = this.x;
 	        float futurY = this.y;
 	        float colisionX=futurX;
@@ -121,8 +149,9 @@ public class WindowGame extends BasicGame {
 	        
 	        boolean victoire = (tileVictoire != null);
 	        
-	        if (victoire) {
+	        if (victoire && victorious != true) {
 	        	victorious = true;
+	        	end = Instant.now();
 	        }
 	        
 	        if (collision) {
@@ -149,6 +178,11 @@ public class WindowGame extends BasicGame {
 			if (this.y > this.yCamera + mapHeight) this.yCamera = this.y - mapHeight;
 			if (this.y < this.yCamera - mapHeight) this.yCamera = this.y + mapHeight;
 
+
+		}
+		else
+		{
+			current = Instant.now();
 		}
 	}
 	/**
@@ -210,6 +244,36 @@ public class WindowGame extends BasicGame {
 	
 	public boolean getVictorious() {
 		return victorious;
+	}
+	public Duration getDuration()
+	{
+		if(end != null)
+			return Duration.between(start, end);
+		return Duration.between(start, current);
+	}
+	
+	public void updateBoard(Final f)
+	{
+		HashMap<Integer, Final> tmp = new HashMap<>();
+		synchronized(board)
+		{
+			board.add(f);
+			Collections.sort(board);
+		}
+		
+	}
+	public String getTimer()
+	{	
+		Duration d;
+		if(end != null)
+			d = Duration.between(start, end);
+		else
+			d = Duration.between(start, current);
+		long milli = d.getNano()/10000000;
+		long sec = d.getSeconds() %60;
+		long min = sec / 60;
+		long hour = sec / 3600;
+		return "Timer : "+min+":"+sec+":"+milli;
 	}
 	
 	public static void main(String[] args) throws SlickException {

@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.Duration;
 import java.util.Random;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
@@ -26,7 +27,7 @@ public class Client extends Thread {
 	String nom;
 	List<String> tampon = new ArrayList<>();
 	int compteur = 0;
-
+	boolean send = false;
 	Thread listener;
 	Thread game;
 	public Client(String nom) {
@@ -47,11 +48,17 @@ public class Client extends Thread {
 					{
 						try{
 							String s = in.readLine();
-							if (s.indexOf("(")!=-1) {
+							if (s.indexOf("(")!=-1 && s.split(":").length == 2) {
 								w.setPersonnage(parseName(s), parsePosition(s));  // POUR LAFFICHAGE
-								System.out.println(parsePosition(s).getCenterX());
 							}
-							System.out.println(s);
+							else if(s.split("-").length == 3)
+							{
+								Final f = new Final();
+								f.name = s.split("-")[0];
+								f.timer = Duration.parse(s.split("-")[2]);
+								w.updateBoard(f);
+								System.out.println(f.name + " - " + f.getTimer() + " - " +f.timer.getSeconds());
+							}
 							
 
 						}catch(IOException e) { }
@@ -97,13 +104,10 @@ public class Client extends Thread {
 				}
 				coordinates = w.getCoordinates();
 				victorious = w.getVictorious();
-				//Calendar cal = Calendar.getInstance();
-				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-				System.out.println(coordinates);
 				out.println(nom + ": " + coordinates);
-
-				if (victorious) {
-					out.println(nom + "- "+ "won");
+				if (victorious && !send) {
+					out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
+					send = true;
 				}
 			
 				

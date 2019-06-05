@@ -37,8 +37,6 @@ public class ThreadClientIRC extends Thread {
 				// attendre un phrase de reponse �
 				req = in.readLine();
 				serv.EnvoyerATous(req);
-				System.out.println(req);
-				System.out.println("pause");
 
 			}
 

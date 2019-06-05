@@ -51,15 +51,17 @@ public class Server {
 	}
 
 	synchronized public void EnvoyerATous(String s) {
-		Calendar cal = Calendar.getInstance();
-       	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
        	if(s != null)
-		for(ThreadClientIRC c : V)
-		{
-			if(s.split(":") != null)
-				if(!s.split(":")[0].equals(c.getNom()))
+			for(ThreadClientIRC c : V)
+			{
+				if(s.split(":") != null && s.split(":").length == 2)
+					if(!s.split(":")[0].equals(c.getNom()))
+						c.Envoyer(s);
+				if(s.split("-") != null && s.split("-").length == 3)
+				{
 					c.Envoyer(s);
-		}
+				}
+			}
 	}
 
 	synchronized public void EnvoyerListeClients(PrintWriter out) {
