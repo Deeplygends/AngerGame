@@ -237,6 +237,7 @@ public class WindowGame extends BasicGame {
 			}
 		}
 		else
+		{
 			if(key == Input.KEY_Y && victorious) 
 			{
 				synchronized(Monitored)
@@ -245,10 +246,9 @@ public class WindowGame extends BasicGame {
 					victorious = false;
 					x = 800;
 					y = 640;
-					xCamera = x + mapWidth;
-					yCamera = y + mapHeight;
-					start = Instant.now();
-					current = Instant.now();
+					xCamera = x;
+					yCamera = y;
+	
 					end = null;
 				}
 			}
@@ -256,6 +256,16 @@ public class WindowGame extends BasicGame {
 			{
 				replay = "no";
 			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			start = Instant.now();
+			current = Instant.now();
+			replay = "wait";
+		}
 	}
 	
 	public String getCoordinates() {
@@ -275,8 +285,8 @@ public class WindowGame extends BasicGame {
 	public boolean getVictorious() {
 		synchronized(Monitored)
 		{
-			if(victorious)
-				System.out.println(victorious + " at timer : " + getTimer());
+			//if(victorious)
+				//System.out.println(victorious + " at timer : " + getTimer());
 			return victorious;
 		}
 	}
@@ -289,23 +299,31 @@ public class WindowGame extends BasicGame {
 	
 	public void updateBoard(Final f)
 	{
+		System.out.println("update board");
 		synchronized(Monitored)
 		{
 			Final tmp = null;
 			for(Final ele : board)
 			{
-				if(ele.name == nom)
-				{
+				System.out.println(ele.name +  " " + nom);
+				if(ele.name.equals(nom))
+				{	
 					tmp = ele;
 				}
 			}
+			
 			if(tmp == null)
+			{
 				board.add(f);
+			}
 			else if(tmp.compareTo(f) > 0)
 			{
 				board.remove(tmp);
 				board.add(f);
+				System.out.println("tmp : " + tmp.getTimer());
 			}
+			System.out.println("f : " + f.getTimer());
+			
 			System.out.println("board size : " + board.size());
 			Collections.sort(board);
 		}

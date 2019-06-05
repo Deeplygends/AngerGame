@@ -50,12 +50,15 @@ public class Client extends Thread {
 			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
 			out = new PrintWriter(sc.getOutputStream(), true);
 			WindowGame w = new WindowGame("Labyrinthe");
+			boolean victorious;
 			while(again)
 			{
 				gameplay++;
 				again = false;
-				boolean victorious = false;
+				victorious = false;
 				allFinnish = false;
+				
+				
 			//Game Start
 				System.out.println("Game Start " + gameplay);
 				if(gameplay < 2)
@@ -84,7 +87,7 @@ public class Client extends Thread {
 			}
 
 
-
+			System.out.println(send);
 			while (true) {
 					try {
 						Thread.sleep(1);
@@ -93,28 +96,25 @@ public class Client extends Thread {
 						e.printStackTrace();
 					}
 					coordinates = w.getCoordinates();
-					System.out.println( "coordonnées : " + coordinates);
+					//System.out.println( "coordonnées : " + coordinates);
 					victorious = w.getVictorious();
 					out.println(nom + ": " + coordinates);
 					if (victorious && !send) {
+						System.out.println("Sending score");
 						out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
 						send = true;
 					}
-					if(replay == "yes" && victorious && send)
+					if(w.replay == "yes" && send)
 					{
 						again = true;
-						break;
+						send = false;
 					}
-					else if(replay == "no" && victorious && send)
+					else if(w.replay == "no" && send)
 					{
 						again = false;
-						break;
+						send = false;
 					}
 				}
-				send = false;
-				Thread.sleep(3000);
-				System.out.println("End of game -> Retry : " + w.replay);
-				w.keyReleased(Input.KEY_ESCAPE, 'c');
 			}
 			
 		} catch (IOException e) {

@@ -5,9 +5,12 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -21,6 +24,7 @@ public class Server {
 	public Vector<ThreadClientIRC> V;
 	public boolean running = true;
 	public ArrayList<ThreadClientIRC> disconnect = new ArrayList<>();
+	public HashMap<String, Duration> board = new HashMap<>();
 	public Server() {
 		try {
 			V = new Vector<>();
@@ -53,6 +57,7 @@ public class Server {
 					System.out.println("adding thread");
 					ajouterClient(th);
 					System.out.println("end synchronized");
+					
 				}
 				
 			}
@@ -86,6 +91,7 @@ public class Server {
 						c.Envoyer(s);
 				if(s.split("-") != null && s.split("-").length == 3)
 				{
+					updateBoard(s);
 					c.Envoyer(s);
 				}
 			}
@@ -101,6 +107,25 @@ public class Server {
 
 	public static void main(String[] args) {
 		new Server();
+	}
+	
+	synchronized void updateBoard(String s)
+	{
+		if(s.split("-").length == 3)
+		{
+			board.put(s.split("-")[0], Duration.parse(s.split("-")[2]));
+		}
+			
+	}
+	
+	synchronized void envoyerBoard(ThreadClientIRC th)
+	{
+		for(String t : board.keySet())
+		{
+			String mess = t;
+			mess += "-" + board.get(t).toString();
+			th.Envoyer(mess);
+		}
 	}
 }
 

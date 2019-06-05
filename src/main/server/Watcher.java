@@ -27,7 +27,7 @@ public class Watcher extends Thread{
 					synchronized(serv.waitingList)
 					{
 						next = serv.waitingList.poll();
-						if(next != null)
+						if(next == null)
 						{
 							break;
 						}
