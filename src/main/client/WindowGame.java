@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.newdawn.slick.Animation;
@@ -79,6 +80,7 @@ public class WindowGame extends BasicGame {
 		this.animations[5] = loadAnimation(spriteSheet, 1, 9, 1);
 		this.animations[6] = loadAnimation(spriteSheet, 1, 9, 2);
 		this.animations[7] = loadAnimation(spriteSheet, 1, 9, 3);
+		randomSpawn();
 		start = Instant.now();
 		current = Instant.now();
 	}
@@ -244,10 +246,7 @@ public class WindowGame extends BasicGame {
 				{
 					replay = "yes";
 					victorious = false;
-					x = 800;
-					y = 640;
-					xCamera = x;
-					yCamera = y;
+					randomSpawn();
 	
 					end = null;
 				}
@@ -267,7 +266,29 @@ public class WindowGame extends BasicGame {
 			replay = "wait";
 		}
 	}
-	
+	public void randomSpawn()
+	{
+		Random r = new Random();
+		Image tileSpan;
+		int tmpx;
+		int tmpy;
+		do
+		{
+			 tmpx = r.nextInt(1563) + 164;
+
+			 tmpy = r.nextInt(1565) + 129;
+			 System.out.println(tmpy);
+			 System.out.println(tmpx);
+		 tileSpan = this.map.getTileImage(
+                tmpx / this.map.getTileWidth(), 
+                tmpy / this.map.getTileHeight(), 
+                this.map.getLayerIndex("spawn"));
+		}while(tileSpan == null);
+		x = tmpx;
+		y = tmpy;
+		xCamera = tmpx;
+		yCamera = tmpy;
+	}
 	public String getCoordinates() {
 		return "("+x+";"+y+")";
 	}
