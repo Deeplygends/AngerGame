@@ -40,6 +40,8 @@ public class ThreadClientIRC extends Thread {
 				{
 					req = in.readLine();
 					System.out.println(req);
+					if(req == null)
+						break;
 					serv.EnvoyerATous(req);
 				}
 

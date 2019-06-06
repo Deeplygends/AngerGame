@@ -96,7 +96,7 @@ public class Server {
 							c.Envoyer(s);
 					if(s.split("-") != null && s.split("-").length == 3)
 					{
-						System.out.println(s);
+						//System.out.println(s);
 						System.out.println("update launch");
 						updateBoard(s);
 						//System.out.println(board.get("Deeply"));
@@ -111,7 +111,7 @@ public class Server {
 		String s = "";
 		for(ThreadClientIRC c : V)
 			s += c.nom+"; ";
-		System.out.println(s);
+		//System.out.println(s);
 		out.println(s);	
 	}
 
@@ -145,7 +145,7 @@ public class Server {
 		{
 			String mess = t;
 			mess += "-won-" + board.get(t).toString();
-			System.out.println(mess);
+			//System.out.println(mess);
 			th.Envoyer(mess);
 		}
 	}

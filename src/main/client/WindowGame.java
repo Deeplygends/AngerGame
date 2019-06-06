@@ -104,12 +104,6 @@ public class WindowGame extends BasicGame {
 			g.drawAnimation(animations[2], personnages.get(pers).getCenterX()-16, personnages.get(pers).getCenterY()-16);     //POUR LAFFICHAGE 
 			g.drawString(pers, personnages.get(pers).getCenterX(), personnages.get(pers).getCenterY()-10);
 		} 
-		g.setColor(new Color(255,255,255));
-		g.fillRect(xCamera-30, yCamera-230,150,25);
-		g.setColor(new Color(0,0,0));
-
-		g.drawString(getTimer(),xCamera-30, yCamera-230);
-		
 		if(victorious)
 		{
 			g.fillRect(xCamera-200,yCamera-200,400, 400);
@@ -125,6 +119,25 @@ public class WindowGame extends BasicGame {
 				}
 			}
 		}
+		g.setColor(new Color(255,255,255));
+		g.fillRect(xCamera-30, yCamera-230,150,25);
+		if(!victorious)
+			g.fillRect(xCamera-280, yCamera+200,150,25);
+		else
+			g.fillRect(xCamera-280, yCamera+175,150,50);
+		
+		g.setColor(new Color(0,0,0));
+		if(!victorious)
+			g.drawString("[R] -> Respawn",xCamera-280, yCamera+200);
+		else
+		{
+			g.drawString("[Y] -> Replay",xCamera-280, yCamera+175);
+			g.drawString("[N] -> Quit",xCamera-280, yCamera+200);
+		}
+			
+		g.drawString(getTimer(),xCamera-30, yCamera-230);
+		
+		
 		
 	}
 
@@ -234,6 +247,12 @@ public class WindowGame extends BasicGame {
 			case Input.KEY_LEFT:  this.direction = 1; this.moving = true; break;
 			case Input.KEY_DOWN:  this.direction = 2; this.moving = true; break;
 			case Input.KEY_RIGHT: this.direction = 3; this.moving = true; break;
+			case Input.KEY_R: 
+				randomSpawn();
+				start = Instant.now();
+				end = null;
+				current = Instant.now();
+				break;
 			default:
 				break;
 			}
@@ -306,8 +325,6 @@ public class WindowGame extends BasicGame {
 	public boolean getVictorious() {
 		synchronized(Monitored)
 		{
-			//if(victorious)
-				//System.out.println(victorious + " at timer : " + getTimer());
 			return victorious;
 		}
 	}
@@ -358,9 +375,8 @@ public class WindowGame extends BasicGame {
 		else
 			d = Duration.between(start, current);
 		long milli = d.getNano()/10000000;
-		long sec = d.getSeconds() %60;
-		long min = sec / 60;
-		long hour = sec / 3600;
+		long sec = d.getSeconds() % 60;
+		long min = (long) (d.getSeconds() / 60.0);
 		return "Timer : "+min+":"+sec+":"+milli;
 	}
 	

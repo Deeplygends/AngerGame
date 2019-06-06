@@ -37,6 +37,7 @@ public class Client extends Thread {
 	String replay;
 	boolean again = true;
 	boolean allFinnish;
+	WindowGame w;
 	
 	public Client(String nom) {
 		this.nom = nom;
@@ -49,7 +50,7 @@ public class Client extends Thread {
 			sc = new Socket(hote, port);
 			in = new BufferedReader(new InputStreamReader(sc.getInputStream()));
 			out = new PrintWriter(sc.getOutputStream(), true);
-			WindowGame w = new WindowGame("Labyrinthe");
+			w = new WindowGame("Labyrinthe");
 			boolean victorious;
 			while(again)
 			{
@@ -109,10 +110,10 @@ public class Client extends Thread {
 						again = true;
 						send = false;
 					}
-					else if(w.replay == "no" && send)
+					else if(w.replay == "no")
 					{
 						again = false;
-						send = false;
+						break;
 					}
 				}
 			}
@@ -128,6 +129,7 @@ public class Client extends Thread {
 				sc.close();
 				in.close();
 				out.close();
+				w.exit();
 			} catch (IOException e) {
 			}
 		}
