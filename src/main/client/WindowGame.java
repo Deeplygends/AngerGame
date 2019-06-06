@@ -136,7 +136,7 @@ public class WindowGame extends BasicGame {
 		else
 		{
 			g.drawString("[Y] -> Replay",xCamera-280, yCamera+175);
-			g.drawString("[N] -> Quit",xCamera-280, yCamera+200);
+			g.drawString("[ECHAP] -> Quit",xCamera-280, yCamera+200);
 		}
 			
 		g.drawString(getTimer(),xCamera-30, yCamera-230);
