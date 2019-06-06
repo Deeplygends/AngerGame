@@ -23,4 +23,9 @@ public class Final implements Comparable<Final>{
 				else
 					return (int)(this.timer.getNano() - f.timer.getNano());
 	}
+	
+	public boolean equals(Final f)
+	{
+		return f.name == name;
+	}
 }

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.newdawn.slick.Animation;
 
@@ -108,11 +109,14 @@ public class WindowGame extends BasicGame {
 		{
 			g.fillRect(xCamera-200,yCamera-200,400, 400);
 			g.setColor(new Color(255,255,255));
-			g.drawString("Tableau des scores", xCamera-100, yCamera-200);
+			g.drawString("Tableau des scores : " + board.size() , xCamera-100, yCamera-200);
 			float vertical = yCamera-200;
-			synchronized(Monitored)
+			synchronized(board)
 			{
-				for(Final s : board)
+				int size = board.size();
+				if(size > 10)
+					size = 9;
+				for(Final s : board.subList(0,size))
 				{
 					vertical += 25;
 					g.drawString((board.indexOf(s)+1)+". " + s.name + " " + s.getTimer(), xCamera-60, vertical);
@@ -140,7 +144,10 @@ public class WindowGame extends BasicGame {
 		
 		
 	}
-
+	public void clearBoard()
+	{
+		board.clear();
+	}
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		if (this.moving && !victorious) {
@@ -338,29 +345,18 @@ public class WindowGame extends BasicGame {
 	public void updateBoard(Final f)
 	{
 		System.out.println("update board");
-		synchronized(Monitored)
-		{
-			Final tmp = null;
-			for(Final ele : board)
-			{
-				System.out.println(ele.name +  " " + nom);
-				if(ele.name.equals(nom))
-				{	
-					tmp = ele;
-				}
-			}
+		synchronized(board)
+		{	
+			Final test = new Final();
+			test.name = nom;
+			ArrayList<Final> tmp = new ArrayList<>(board.stream().filter(x -> x.name == nom).collect(Collectors.toList()));
+			System.out.println("tmp size : " + tmp.size());
+			board.removeAll(tmp);
 			
-			if(tmp == null)
-			{
-				board.add(f);
-			}
-			else if(tmp.compareTo(f) > 0)
-			{
-				board.remove(tmp);
-				board.add(f);
-				System.out.println("tmp : " + tmp.getTimer());
-			}
-			System.out.println("f : " + f.getTimer());
+		
+			board.remove(tmp);
+			board.add(f);
+
 			
 			System.out.println("board size : " + board.size());
 			Collections.sort(board);

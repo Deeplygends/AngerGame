@@ -30,7 +30,8 @@ public class ThreadClientIRC extends Thread {
 			req = in.readLine();
 			System.out.println("Set Name :" + req);
 			setNom(req);
-			serv.envoyerBoard(this);
+			if(serv.board.size() > 0)
+				serv.envoyerBoard(this);
 			while (true) {
 				
 				// attendre un phrase de reponse
@@ -39,7 +40,7 @@ public class ThreadClientIRC extends Thread {
 				else
 				{
 					req = in.readLine();
-					System.out.println(req);
+					//System.out.println(req);
 					if(req == null)
 						break;
 					serv.EnvoyerATous(req);

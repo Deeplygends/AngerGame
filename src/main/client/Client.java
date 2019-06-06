@@ -104,6 +104,7 @@ public class Client extends Thread {
 						System.out.println("Sending score");
 						out.println(nom + "- "+ "won" + "-" + w.getDuration().toString());
 						send = true;
+						victorious = false;
 					}
 					if(w.replay == "yes" && send)
 					{

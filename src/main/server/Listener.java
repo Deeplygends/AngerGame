@@ -24,7 +24,9 @@ public class Listener extends Thread{
 			try{
 				String s = in.readLine();
 				if(s != null)
-					if (s.indexOf("(")!=-1 && s.split(":").length == 2) {
+					if(s.equals("clear"))
+						w.clearBoard();
+					else if (s.indexOf("(")!=-1 && s.split(":").length == 2) {
 						w.setPersonnage(parseName(s), parsePosition(s));  // POUR LAFFICHAGE
 					}
 					else if(s.split("-").length == 3)

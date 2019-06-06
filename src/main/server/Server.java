@@ -89,6 +89,12 @@ public class Server {
        		if(V.size() != 0)
        		{
        			
+       			if(s.split("-") != null && s.split("-").length == 3)
+				{
+					System.out.println(s);
+					System.out.println("update launch");
+					updateBoard(s);
+				}
 				for(ThreadClientIRC c : V)
 				{
 					if(s.split(":") != null && s.split(":").length == 2)
@@ -96,11 +102,7 @@ public class Server {
 							c.Envoyer(s);
 					if(s.split("-") != null && s.split("-").length == 3)
 					{
-						//System.out.println(s);
-						System.out.println("update launch");
-						updateBoard(s);
-						//System.out.println(board.get("Deeply"));
-						c.Envoyer(s);
+						envoyerBoard(c);
 					}
 				}
        		}
@@ -119,34 +121,49 @@ public class Server {
 		new Server();
 	}
 	
-	synchronized void updateBoard(String s)
+	public void updateBoard(String s)
 	{
-		String[] split = s.split("-");
-		if(split.length == 3)
+		synchronized(board)
 		{
-			Duration tmp = Duration.parse(split[2]);
-			if(board.keySet().contains(split[0]))
+			String[] split = s.split("-");
+			if(split.length == 3)
 			{
-				if(board.get(split[0]).compareTo(tmp) > 0)
+				Duration tmp = Duration.parse(split[2]);
+				if(board.keySet().contains(split[0]))
 				{
-					System.out.println("Old : " + board.get(split[0]).getSeconds() + "New record : " + tmp.getSeconds());
-					board.put(split[0], tmp);
+					if(board.get(split[0]).compareTo(tmp) > 0)
+					{
+						System.out.println("Old : " + board.get(split[0]).getSeconds() + "New record : " + tmp.getSeconds());
+						board.put(split[0], tmp);
+					}
 				}
+				else
+					board.put(split[0], tmp);
 			}
-			else
-				board.put(split[0], tmp);
 		}
 			
 	}
 	
 	synchronized void envoyerBoard(ThreadClientIRC th)
 	{
-		for(String t : board.keySet())
+		synchronized(board)
 		{
-			String mess = t;
-			mess += "-won-" + board.get(t).toString();
-			//System.out.println(mess);
-			th.Envoyer(mess);
+			th.Envoyer("clear");
+			for(String t : board.keySet())
+			{
+				
+				String mess = t;
+				mess += "-won-" + board.get(t).toString();
+				//System.out.println(mess);
+				th.Envoyer(mess);
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Board send to " + th.nom + " : " +board.size());
 		}
 	}
 }
